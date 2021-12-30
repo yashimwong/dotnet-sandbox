@@ -5,7 +5,8 @@ const app = express();
 app.use(express.json());
 
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`));
-app.get("/api/v1/tours", (req, res) => {
+
+const getAllTours = (req, res) => {
     res.status(200).json({
         status: "success",
         results: tours.length,
@@ -13,7 +14,7 @@ app.get("/api/v1/tours", (req, res) => {
             tours: tours,
         },
     });
-});
+};
 
 const findTour = (id) => {
     const found_tour = tours.find((t) => t.id === Number(id));
@@ -22,13 +23,13 @@ const findTour = (id) => {
     return { data, status_code };
 };
 
-app.get("/api/v1/tours/:id", (req, res) => {
+const getTour = (req, res) => {
     const { id } = req.params;
     const { data, status_code } = findTour(id);
     res.status(status_code).json(data);
-});
+};
 
-app.post("/api/v1/tours", (req, res) => {
+const createTour = (req, res) => {
     const new_id = tours.length;
     const new_tour = { id: new_id, ...req.body };
     tours.push(new_tour);
@@ -40,9 +41,9 @@ app.post("/api/v1/tours", (req, res) => {
             },
         });
     });
-});
+};
 
-app.patch("/api/v1/tours/:id", (req, res) => {
+const updateTour = (req, res) => {
     const { id } = req.params;
     const { data, status_code } = findTour(id);
     if (status_code === 404) {
@@ -64,9 +65,9 @@ app.patch("/api/v1/tours/:id", (req, res) => {
             });
         });
     }
-});
+};
 
-app.delete("/api/v1/tours/:id", (req, res) => {
+const deleteTour = (req, res) => {
     const { id } = req.params;
     const { data, status_code } = findTour(id);
     if (status_code === 404) {
@@ -82,7 +83,10 @@ app.delete("/api/v1/tours/:id", (req, res) => {
             });
         });
     }
-});
+};
+
+app.route("/api/v1/tours").get(getAllTours).post(createTour);
+app.route("/api/v1/tours/:id").get(getTour).patch(updateTour).delete(deleteTour);
 
 const port = 3000;
 app.listen(port, () => {
