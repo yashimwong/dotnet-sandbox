@@ -1,3 +1,4 @@
+const { test } = require("malaysia-demographics");
 const fs = require("fs");
 const superagent = require("superagent");
 
@@ -44,6 +45,7 @@ const getDogPic = async () => {
 
 (async () => {
     try {
+        test("hello");
         console.log("1: Getting dog pics");
         const x = await getDogPic();
         console.log(x);

@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "malaysia-demographics": "^0.0.3",
     "superagent": "^6.1.0"
   }
 }
